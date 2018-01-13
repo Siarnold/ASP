@@ -56,9 +56,9 @@ class StockHMM():
 		ld_c1 = ld_c1[4:]
 		close = self.close[5:]
 		dates = self.dates[5:]
-		features = np.column_stack([ld_hl,ld_c5,ld_v5])
-		model = GaussianHMM(n_components= self.n, covariance_type="full", n_iter=2000).fit(features)
-		self.hidden_states = model.predict(features)
+		features = np.column_stack([ld_hl,ld_c5,ld_v5]) # stack features
+		model = GaussianHMM(n_components= self.n, covariance_type="full", n_iter=2000).fit(features) # predict HMM models
+		self.hidden_states = model.predict(features)  # predict hidden states (from data #5)
 		plt.figure(figsize=(25, 18)) 
 		axes = np.arange(0,close.shape[0])
 		for i in range(model.n_components):
