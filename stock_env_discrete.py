@@ -43,16 +43,17 @@ class StockEnv:
     # action in [-1, 1], where -1 represents sell all while 1 represents buy all
     # return (state, reward, done)
     def step(self, action):
-        assert -1 <= action <= 1
-
         # update the cash and n_stock
         # 0 < action means buy in stocks
+        action = action - 2
         if 0 < action:
+            action = action * 0.3
             outlay = self.cash * action
             n_in = int(outlay / self.price_curr)
             self.cash -= n_in * self.price_curr
             self.n_stock += n_in
         else:
+            action = action * 0.3
             n_out = int(- self.n_stock * action)
             self.n_stock -= n_out
             self.cash += n_out * self.price_curr
@@ -68,12 +69,12 @@ class StockEnv:
         reward = asset - self.asset
         self.asset = asset
 
-        state = (self.cash, self.n_stock, self.price_curr)
+        state = [self.cash, self.n_stock, self.price_curr]
         return state, reward, self.done
 
 
 if __name__ == '__main__':
-    env = StockEnv()
+    env = StockEnv(STOCK.Tencent)
     for x in xrange(10):
         print ('Enter your action between -1 and 1: ')
         my_action = input()
