@@ -30,7 +30,7 @@ class StockHMM():
 		self.adj_close = data[:,4]
 		self.volume = data[:,5]
 		#number of hidden state
-		self.n = 6
+		self.n = 5
 	def get_data(self,path):
 		f = open(path)
 		lines = f.readlines()
@@ -58,7 +58,7 @@ class StockHMM():
 		dates = self.dates[5:]
 		features = np.column_stack([ld_hl,ld_c5,ld_v5])
 		model = GaussianHMM(n_components= self.n, covariance_type="full", n_iter=2000).fit(features)
-		hidden_states = model.predict(features)
+		self.hidden_states = model.predict(features)
 		plt.figure(figsize=(25, 18)) 
 		axes = np.arange(0,close.shape[0])
 		for i in range(model.n_components):
@@ -68,7 +68,7 @@ class StockHMM():
 		plt.show()
 		os.system("pause")
 if __name__ == '__main__':
-	stockhmm = StockHMM(STOCK.Google)
+	stockhmm = StockHMM(STOCK.Baidu)
 	stockhmm.train()
 	
 	
