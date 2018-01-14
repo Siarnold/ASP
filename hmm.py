@@ -1,10 +1,7 @@
-from enum import Enum
 from hmmlearn.hmm import GaussianHMM
 import numpy as np
 from matplotlib import cm, pyplot as plt
-import matplotlib.dates as dates
-import datetime
-	
+from sklearn.externals import joblib
 class StockHMM():
 	def __init__(self, stock = "Google"):
 		if stock == "Google":
@@ -54,7 +51,6 @@ class StockHMM():
 	def train(self,nc,n):
 		features = self.features_extraction(n);
 		self.model = GaussianHMM(n_components = nc, covariance_type="full", n_iter=2000).fit(features) # predict HMM models
-		self.transm = self.model.transmat_
 	
 	# extract features from first n data
 	def features_extraction(self,n):
@@ -70,15 +66,17 @@ class StockHMM():
 		features = self.features_extraction(n-1)
 		hidden_states_proba = self.model.predict_proba(features)
 		states = hidden_states_proba[n-7,:]
-		return states.dot(self.transm)
-		
+		return states.dot(self.model.transmat_)
+	
 	
 
 if __name__ == '__main__':
 	nc = 5; #number of hidden states
 	Baidu = StockHMM("Baidu")
 	# train with first 1000 data
-	Baidu.train(nc,1000)
+	#Baidu.train(nc,1000)
+	Baidu.model = joblib.load("BaiDuHMM.pkl")
+	states_prob = Baidu.predict(2000)
 	x = []
 	# test, predic states from 1000 to 2000
 	for i in range(1000,2000):
@@ -87,3 +85,5 @@ if __name__ == '__main__':
 	states = x.argmax(axis = 1)
 	# plot
 	StockHMM.plot(states,Baidu.close[1000:2000],nc)
+	joblib.dump(Baidu.model,"BaiDuHMM.pkl")
+	
