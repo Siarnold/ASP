@@ -1,20 +1,39 @@
 from hmm import StockHMM
 from stock_env import StockEnv
 from stock_env import STOCK 
+from stock_env_discrete import StockEnv as StockEnvD
+from stock_env_discrete import STOCK as STOCKD
 from sklearn.externals import joblib
+import warnings
 
 if __name__ == '__main__':
-    env = StockEnv(STOCK.Baidu)
-    env.count = 1500;
-    nc = 5; #number of hidden states
-    Baidu = StockHMM("Baidu")
+    warnings.filterwarnings("ignore")  # ignore warnings
+
+    stockHMM = StockHMM(STOCK.Baidu)
     # load model
-    Baidu.model = joblib.load("BaiDuHMM.pkl")
-    # Trade 300 periods
-    for x in range(env.count,env.count+400):
-        states = Baidu.predict(x)
-        # 0 2 4 for up ; 1 3 down
-        my_action = -0.1*(states[0] + states[2] + states[4]) + 0.05
-        print('New info: ((cash, n_stock, current price), reward, done)')
-        print(env.step(my_action))
-    print('You have earned $%f just now.' % (env.asset - 10000))
+    stockHMM.model = joblib.load("BaiDuHMM.pkl")
+
+    print('Continuous: ')
+    env = StockEnv(STOCK.Baidu)
+    # [1000, 2000)
+    env.set_count(999)
+    for x in range(1000):
+        p_states = stockHMM.predict(x + 1000)
+        # order: 2 3 4 1 0
+        my_action = p_states[2] + p_states[3] * 0.5 - p_states[1] * 0.5 - p_states[0]
+        env.step(my_action)
+
+    print(env.asset - 10000)
+
+    print('Discrete: ')
+    env = StockEnvD(STOCKD.Baidu)
+    # [1000, 2000)
+    env.set_count(999)
+    for x in range(1000):
+        p_states = stockHMM.predict(x + 1000)
+        # order: 2 3 4 1 0
+        my_action = round(5 * (p_states[2] + p_states[3] * 0.5 - p_states[1] * 0.5 - p_states[0]) + 5)
+        env.step(my_action)
+
+    print(env.asset - 10000)
+

@@ -21,7 +21,7 @@ def get_data(path):
 
 # class name using camel convention
 class StockEnv:
-    def __init__(self, stock = STOCK.Google):
+    def __init__(self, stock=STOCK.Google):
         if stock == STOCK.Google:
             path = './data/GOOG.csv'
         elif stock == STOCK.Baidu:
@@ -40,20 +40,23 @@ class StockEnv:
         self.asset = self.cash + self.n_stock * self.price_curr
         self.done = False
 
-    # action in [-1, 1], where -1 represents sell all while 1 represents buy all
+    # jump to the cnt^th data, starting from 0
+    def set_count(self, cnt):
+        self.count = cnt
+        self.price_curr = self.data[self.count]
+
+    # action in [0, 10]
     # return (state, reward, done)
     def step(self, action):
         # update the cash and n_stock
         # 0 < action means buy in stocks
-        action = action - 2
+        action = 0.2 * action - 1
         if 0 < action:
-            action = action * 0.3
             outlay = self.cash * action
             n_in = int(outlay / self.price_curr)
             self.cash -= n_in * self.price_curr
             self.n_stock += n_in
         else:
-            action = action * 0.3
             n_out = int(- self.n_stock * action)
             self.n_stock -= n_out
             self.cash += n_out * self.price_curr
@@ -76,7 +79,7 @@ class StockEnv:
 if __name__ == '__main__':
     env = StockEnv(STOCK.Tencent)
     for x in range(10):
-        print ('Enter your action between -1 and 1: ')
+        print ('Enter your action between 0 and 10: ')
         my_action = input()
         print('New info: ((cash, n_stock, current price), reward, done)')
         print(env.step(my_action))

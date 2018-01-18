@@ -1,4 +1,6 @@
 from enum import Enum
+from matplotlib import pyplot as plt
+import numpy as np
 
 STOCK = Enum('Stock', ('Google', 'Tencent', 'Baidu'))
 
@@ -19,9 +21,20 @@ def get_data(path):
     return x
 
 
+# plot hidden states with close price
+def plot_hidden_states(hidden_states, close, nc):
+    plt.figure(figsize=(25, 18))
+    axes = np.arange(0, close.shape[0])
+    for i in range(nc):
+        pos = (hidden_states == i)
+        plt.plot(axes[pos], close[pos], 'o', label='hidden state %d' % i, lw=2)
+        plt.legend(loc="best")
+    plt.show()
+
+
 # class name using camel convention
 class StockEnv:
-    def __init__(self, stock = STOCK.Google):
+    def __init__(self, stock=STOCK.Google):
         if stock == STOCK.Google:
             path = './data/GOOG.csv'
         elif stock == STOCK.Baidu:
@@ -39,6 +52,11 @@ class StockEnv:
         self.price_curr = self.data[self.count]
         self.asset = self.cash + self.n_stock * self.price_curr
         self.done = False
+
+    # jump to the cnt^th data, starting from 0
+    def set_count(self, cnt):
+        self.count = cnt
+        self.price_curr = self.data[self.count]
 
     # action in [-1, 1], where -1 represents sell all while 1 represents buy all
     # return (state, reward, done)
