@@ -3,12 +3,18 @@ from stock_env_discrete import STOCK
 from RL_brain import DeepQNetwork
 import numpy as np
 
+# global variable
+observation = None
+
+
 def run_stock():
     env = StockEnv(STOCK.Baidu)
     mean = 0
     for episode in range(50):
-    	step = 0
+        step = 0
         while True:
+
+            global observation
             observation = [env.cash, env.n_stock, env.price_curr]
 
             # RL choose action based on observation

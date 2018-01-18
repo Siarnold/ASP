@@ -3,10 +3,11 @@ from stock_env_discrete import STOCK
 import random
 import numpy as np
 
+
 def run_stock():
     n_epoch = 100
     mean = 0
-    for x in xrange(n_epoch):
+    for x in range(n_epoch):
         env = StockEnv(STOCK.Baidu)
         while True:
             action = random.randint(0, 5)

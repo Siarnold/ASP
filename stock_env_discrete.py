@@ -75,7 +75,7 @@ class StockEnv:
 
 if __name__ == '__main__':
     env = StockEnv(STOCK.Tencent)
-    for x in xrange(10):
+    for x in range(10):
         print ('Enter your action between -1 and 1: ')
         my_action = input()
         print('New info: ((cash, n_stock, current price), reward, done)')
