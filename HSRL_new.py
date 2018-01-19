@@ -3,7 +3,7 @@ from stock_env_discrete import STOCK
 from stock_env import STOCK as STOCKC
 from hmm import StockHMM
 from sklearn.externals import joblib
-from RL_brain import DeepQNetwork
+from RL_brain_new import DeepQNetwork
 import numpy as np
 import warnings
 from matplotlib import pyplot as plt

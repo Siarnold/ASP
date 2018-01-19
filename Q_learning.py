@@ -2,6 +2,7 @@ from stock_env_discrete import StockEnv
 from stock_env_discrete import STOCK 
 from RL_brain import DeepQNetwork
 import numpy as np
+from matplotlib import pyplot as plt
 
 # global variable
 observation = None
@@ -42,6 +43,9 @@ def run_stock():
 
     # calculate mean
     print(np.mean(mean), np.var(mean))
+    plt.scatter(range(len(mean)), mean)
+    plt.show()
+
     # end of game
     print('game over')
 
