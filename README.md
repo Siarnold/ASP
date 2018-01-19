@@ -2,8 +2,8 @@
 
 > As the big assignment for the course of Applied Stochastic Process in 2017 Fall, Tsinghua University   
 > 19, Jan, 2018  
-> Contact: siarnold@foxmail.com
-> Collaborator: Jiang LIU
+> Contact: siarnold@foxmail.com  
+> Collaborator: Jiang LIU  
 
 ------
 
